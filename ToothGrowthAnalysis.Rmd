@@ -1,6 +1,5 @@
 ---
 title: "Inferential Data Analysis Part2"
-author: "Amol Nankar"
 date: "November 22, 2016"
 output:
   word_document: default

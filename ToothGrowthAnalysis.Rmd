@@ -1,0 +1,69 @@
+---
+title: "Inferential Data Analysis Part2"
+author: "Amol Nankar"
+date: "November 22, 2016"
+output:
+  word_document: default
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Overview of ToothGrowth data analysis
+
+we're going to analyze the ToothGrowth data in the R datasets package.
+
+1. Load the ToothGrowth data and perform some basic exploratory data analyses
+2. Provide a basic summary of the data.
+3. Use confidence intervals and/or hypothesis tests to compare tooth growth by supp and dose. (Only use the techniques from class, even if there's other approaches worth considering)
+4. State your conclusions and the assumptions needed for your conclusions.
+
+
+
+```{r ToothGrowth, echo=TRUE}
+library(datasets)
+library(ggplot2)
+
+##1. Load the ToothGrowth data
+data(ToothGrowth)
+
+
+##2. Provide a basic summary of the data
+summary(ToothGrowth)
+
+dim(ToothGrowth)
+
+head(ToothGrowth)
+
+##Use confidence intervals and/or hypothesis tests to compare tooth growth by supp and dose.
+ggplot(data=ToothGrowth, aes(x = factor(supp), y = len)) + geom_boxplot(aes(fill=factor(dose)))
+
+
+ggplot(ToothGrowth, aes(x = factor(supp), y = len, fill = factor(supp))) + geom_violin(col = "yellow", size = 1) +
+              geom_violin(aes(fill = factor(dose)))
+
+## interval test to see if supplement has an impact on length. Group1 has data for VC and Group2 has lentth for OJ
+## tooth growth by supplement type
+
+supp_vc=ToothGrowth$len[ToothGrowth$supp=="VC"]
+supp_oj=ToothGrowth$len[ToothGrowth$supp=="OJ"]
+res<-t.test(supp_vc,supp_oj,var.equal = F,paired=F)
+res$conf.int
+
+##  interval test to see if Supplement VC with 2.0 does yields longer teeth. 
+
+supp_vc20=ToothGrowth$len[ToothGrowth$supp=="VC" & ToothGrowth$dose==2.0]
+supp_rest=ToothGrowth$len[!(ToothGrowth$supp=="VC" & ToothGrowth$dose==1.0)]
+res<-t.test(supp_vc20,supp_rest,var.equal = F,paired=F)
+res$conf.int
+
+
+```
+
+##Conclusion
+1. Doses Supplement VC at 2.0 result in longer teeth
+2. Supplement does not have a significant impact
+

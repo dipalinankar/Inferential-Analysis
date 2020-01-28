@@ -1,6 +1,6 @@
 ---
 title: "ToothGrowthAnalysis"
-author: "Amol Nankar"
+
 date: "November 24, 2016"
 output:
   word_document: default

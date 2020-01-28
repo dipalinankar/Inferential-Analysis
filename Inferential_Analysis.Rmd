@@ -1,0 +1,75 @@
+---
+title: "Tooth Growth Analysis"
+author: "Dipali Bagad"
+date: "September 6, 2017"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Overview of ToothGrowth data analysis
+
+we're going to analyze the ToothGrowth data in the R datasets package.
+1. Load the ToothGrowth data and perform some basic exploratory data analyses
+2. Provide a basic summary of the data.
+3. Use confidence intervals and/or hypothesis tests to compare tooth growth by supp and dose. (Only use the techniques from class, even if there's other approaches worth considering)
+4. State your conclusions and the assumptions needed for your conclusions.
+
+## Analyze Toothgrowth data
+
+```{r ToothGrowth, echo=TRUE}
+library(datasets)
+library(ggplot2)
+
+##1. Load the ToothGrowth data
+data(ToothGrowth)
+
+##2. Provide a basic summary of the data
+summary(ToothGrowth)
+
+dim(ToothGrowth)
+
+## sample rows from data
+head(ToothGrowth)
+
+##graph
+ggplot(aes(x = supp, y = len), data = ToothGrowth) +
+geom_boxplot(aes(fill = supp)) + facet_wrap(~ dose) +
+xlab("Dose") + ylab("Length") 
+
+## From above graph we can say that:
+#1.higher dose leads to bigger length 
+#2. When VJ dose is lower that time OJ has outperformed
+
+##3. Use confidence intervals and/or hypothesis tests to compare tooth growth by supp and dose. (Only use the techniques from class, even if there's other approaches worth considering)
+#welch t test for hypothesis 
+t.test(len ~ supp, paired = F, var.equal = F, data = ToothGrowth)
+
+t.test(len ~ supp, paired = F, var.equal = F, data = ToothGrowth[ToothGrowth$dose == 0.5,])
+
+t.test(len ~ supp, paired = F, var.equal = F, data = ToothGrowth[ToothGrowth$dose == 1,])
+
+t.test(len ~ supp, paired = F, var.equal = F, data = ToothGrowth[ToothGrowth$dose == 2,])
+
+t.test(len ~ dose, paired = F, var.equal = F, data = ToothGrowth[ToothGrowth$dose!=1,])
+
+## 1. Higher dose tends to bigger length 
+## 2. On average, OJ outperformed VC and the result is close to significant at 95% confidence level and this is more salient in lower dose conditions (both significant at 95% level)
+```
+
+## Assumptions
+
+1. Populations are independant
+2. The variances between populations are different and a random selection was used
+2. The population was comprised of similar objects.
+3. For the populations to be independent, 60 objects would have to be used so each combination of dose level and delivery method were not affected by the other methods. In research the researchers must have been unaware of which objects were given which dose level or delivery method during measurements. And objects unaware of any specific treatment given to them, if any.
+
+## Conclusions
+
+1. Supplement type does seem to have an effect on tooth growth with OJ outperforming VC. This effect is more salient in conditions with lower doses
+2. Higher does results in bigger length
